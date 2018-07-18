@@ -1,4 +1,5 @@
 syntax on
+set noshowmode
 set hidden
 set signcolumn=yes
 set mouse=a
@@ -12,7 +13,7 @@ set expandtab
 set smarttab
 set number
 set relativenumber
-"set t_Co=256
+set t_Co=256
 set splitright
 set splitbelow
 set textwidth=80
@@ -31,9 +32,8 @@ set cmdheight=2
 endif
 
 call plug#begin()
-Plug 'arcticicestudio/nord-vim'
+Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'tpope/vim-surround'
-let g:nord_comment_brightness = 20
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -45,8 +45,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug '/usr/local/bin/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
@@ -77,6 +76,7 @@ let g:LanguageClient_serverCommands = {
     \ 'cpp': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
     \ 'c': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
     \ 'python': ['pyls'],
+    \ 'python3': ['pyls'],
     \ }
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
 let g:LanguageClient_settingsPath = '/home/markusakesson/.config/nvim/settings.json'
@@ -92,5 +92,14 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 let g:echodoc_enable_at_startup = 1
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
+nnoremap <c-p> :FZF<cr>
+
+"========Statusline=======
+let g:lightline = {
+      \ 'colorscheme': 'nord',
+      \ }
+
 "========Colorscheme======
+let g:nord_comment_brightness = 20
+let g:nord_italic_comments = 1
 colorscheme nord
