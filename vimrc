@@ -17,11 +17,13 @@ set t_Co=256
 set splitright
 set splitbelow
 set textwidth=80
-set termguicolors
+"set termguicolors
 set completeopt+=preview
 set backspace=indent,eol,start
 set rtp+=/usr/local/opt/fzf
 set cmdheight=2
+
+let mapleader = ","
 
 "========CHecks if Vim-Plug is installed before loading plugins 
 
@@ -93,6 +95,8 @@ let g:echodoc_enable_at_startup = 1
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
 nnoremap <c-p> :FZF<cr>
+nnoremap <leader>f :Lines<cr>
+nnoremap <leader>b :Buffers<cr>
 
 "========Statusline=======
 let g:lightline = {
