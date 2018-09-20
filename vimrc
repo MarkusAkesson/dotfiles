@@ -25,6 +25,10 @@ set cmdheight=2
 let mapleader=","
 set shortmess+=c
 
+
+" linux c kernel style
+au FileType c,h setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
+
 if empty(glob('~/.vim/autoload/plug.vim')) 
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -53,6 +57,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
+Plug 'majutsushi/tagbar'
 call plug#end()
 
 "=========DEOPLETE=========== 
@@ -72,8 +77,8 @@ call deoplete#custom#source('LanguageClient',
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp': ['usr/ocal/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
-    \ 'c': ['usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'cpp': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'c': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
     \ }
@@ -95,6 +100,9 @@ nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <c-p> :FZF<cr>
 nnoremap <leader>f :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>r :Rg<cr>
+
+nnoremap <leader>t :TagbarToggle<cr>
 
 "========Neosnippets=====
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
