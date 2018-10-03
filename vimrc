@@ -75,7 +75,7 @@ call deoplete#custom#source('LanguageClient',
             \ 'min_pattern_length',
             \ 2)
 
-"=========LSP=================
+"=========Language-client Neovim=================
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
@@ -96,9 +96,16 @@ inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-let g:echodoc_enable_at_startup = 1
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
+
+"========== Echo doc ============
+let g:echodoc_enable_at_startup = 1
+
+"========== FZF =============
 nnoremap <c-p> :FZF<cr>
 nnoremap <leader>f :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
