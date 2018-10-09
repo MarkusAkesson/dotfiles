@@ -1,4 +1,4 @@
-set PATH $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $PATH
+set PATH $HOME/bin $HOME/.cargo/bin /usr/bin /usr/sbin /sbin $PATH
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LDFLAGS "-L/usr/local/opt/llvm/lib"
 #set -Ux CPPFLAGS "-I/usr/local/opt/llvm/include"

@@ -17,10 +17,10 @@ set relativenumber
 set splitright
 set splitbelow
 set textwidth=80
-"set termguicolors
+set termguicolors
 set completeopt+=preview
 set backspace=indent,eol,start
-set rtp+=/usr/local/opt/fzf
+set rtp+=/usr/bin/fzf
 set cmdheight=2
 let mapleader=","
 set shortmess+=c
@@ -29,7 +29,7 @@ set shortmess+=c
 " linux c kernel style
 au FileType c,h setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
 
-if empty(glob('~/.vim/autoload/plug.vim')) 
+if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -52,7 +52,8 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 Plug 'itchyny/lightline.vim'
-Plug '/usr/local/bin/fzf'
+Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all'}
+"Plug '/usr/bin/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'Shougo/neosnippet.vim'
@@ -79,13 +80,13 @@ call deoplete#custom#source('LanguageClient',
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
-    \ 'c': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'cpp': ['/home/markus/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'c': ['/home/markus/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
     \ }
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/markusakesson/.config/nvim/settings.json'
+let g:LanguageClient_settingsPath = '/home/markus/.config/nvim/settings.json'
 let g:LanguageClient_hasSnippetSupport = 0
 set completefunc=LanguageClient#complete
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
@@ -107,7 +108,8 @@ let g:echodoc_enable_at_startup = 1
 
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
-nnoremap <leader>f :Lines<cr>
+nnoremap <leader>f :BLines<cr>
+nnoremap <leader>F :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
 
