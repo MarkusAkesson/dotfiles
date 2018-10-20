@@ -216,7 +216,7 @@ selection:
 
   save_to_clipboard: true
 
-dynamic_title: true
+dynamic_title: false
 
 hide_cursor_when_typing: false
 

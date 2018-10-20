@@ -18,12 +18,12 @@ set splitright
 set splitbelow
 set textwidth=80
 set termguicolors
-set completeopt+=preview
+set completeopt-=preview
 set backspace=indent,eol,start
 set rtp+=/usr/bin/fzf
 set cmdheight=2
 let mapleader=","
-set shortmess+=c
+"set shortmess+=c
 
 
 " linux c kernel style
@@ -58,11 +58,10 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'majutsushi/tagbar'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
-call plug#end()
 
+call plug#end()
 "=========DEOPLETE===========
 set runtimepath+=~/.vim/plugged/deoplete.nvim/
 let g:deoplete#enable_at_startup = 1
@@ -112,8 +111,8 @@ nnoremap <leader>f :BLines<cr>
 nnoremap <leader>F :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
+nnoremap <leader>t :BTags<cr>
 
-nnoremap <leader>t :TagbarToggle<cr>
 
 "========Neosnippets=====
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
