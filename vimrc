@@ -60,6 +60,7 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
+Plug 'rust-lang/rust.vim'
 
 call plug#end()
 "=========DEOPLETE===========
@@ -79,15 +80,15 @@ call deoplete#custom#source('LanguageClient',
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp': ['/home/markus/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
-    \ 'c': ['/home/markus/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'cpp': ['cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'c': ['cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
     \ }
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
 let g:LanguageClient_settingsPath = '/home/markus/.config/nvim/settings.json'
 let g:LanguageClient_hasSnippetSupport = 0
-set completefunc=LanguageClient#complete
+"set completefunc=LanguageClient#complete
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
 " use tab to forward cycle
 inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
@@ -104,6 +105,7 @@ nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
 
 "========== Echo doc ============
 let g:echodoc_enable_at_startup = 1
+let g:echodoc#type = 'signature'
 
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
@@ -123,6 +125,9 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
+"======== Rust.vim========
+let g:rustfmt_autosave = 1
 
 "========Statusline=======
 let g:lightline = {

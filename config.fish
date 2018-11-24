@@ -6,8 +6,6 @@ set PATH $HOME/bin $HOME/.cargo/bin /usr/bin /usr/sbin /sbin $PATH
 set -Ux LIBRARY_PATH ""
 set -Ux EDITOR nvim
 
-set -Ux GOPATH $HOME/Programming/go
-
 alias vim nvim
 
 alias aceproxy "docker run -t -p 8000:8000 ikatson/aceproxy"
