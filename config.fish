@@ -1,4 +1,4 @@
-set PATH $HOME/bin $HOME/.cargo/bin /usr/bin /usr/sbin /sbin $PATH
+set PATH $HOME/bin $HOME/.cargo/bin /usr/bin /usr/sbin /sbin /usr/local/bin $PATH
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LDFLAGS "-L/usr/local/opt/llvm/lib"
 #set -Ux CPPFLAGS "-I/usr/local/opt/llvm/include"
@@ -7,10 +7,12 @@ set -Ux LIBRARY_PATH ""
 set -Ux EDITOR nvim
 
 alias vim nvim
+alias john $HOME/repos/JohnTheRipper/run/john
 
 alias aceproxy "docker run -t -p 8000:8000 ikatson/aceproxy"
 alias efishrc "nvim ~/.config/fish/config.fish"
 alias evimrc "nvim ~/.vimrc"
+alias eterm "nvim ~/.config/alacritty/alacritty.yml"
 #set -U FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 set -Ux FZF_DEFAULT_COMMAND "fd --type file --color=always"
 set -Ux FZF_FIND_FILE_COMMAND "fd --type file --color=always"

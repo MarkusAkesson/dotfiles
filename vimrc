@@ -28,6 +28,7 @@ let mapleader=","
 
 " linux c kernel style
 au FileType c,h setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
+au FileType asm setlocal ft=nasm
 
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -61,6 +62,7 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
 Plug 'rust-lang/rust.vim'
+Plug 'w0rp/ale'
 
 call plug#end()
 "=========DEOPLETE===========
@@ -77,8 +79,6 @@ call deoplete#custom#source('LanguageClient',
             \ 2)
 
 "=========Language-client Neovim=================
-    "\ 'cpp': ['cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
-    "\ 'c': ['cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
@@ -130,6 +130,12 @@ endif
 
 "======== Rust.vim========
 let g:rustfmt_autosave = 1
+
+"======== ALE =======
+let g:ale_fixers = {
+\ '*': ['remove_trailing_lines', 'trim_whitespace'],
+\}
+let g:ale_fix_on_save = 1
 
 "========Statusline=======
 let g:lightline = {
