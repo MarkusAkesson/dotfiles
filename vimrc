@@ -20,19 +20,20 @@ set textwidth=80
 "set termguicolors
 set completeopt+=preview
 set backspace=indent,eol,start
-set rtp+=/usr/local/opt/fzf
+set rtp+=/home/markus/repos/fzf
 set cmdheight=2
-let mapleader=","
 set shortmess+=c
 
+let mapleader=","
 
 " linux c kernel style
 au FileType c,h setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
+au FileType asm setlocal ft=nasm
 
-if empty(glob('~/.vim/autoload/plug.vim')) 
+if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    "autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin()
@@ -52,14 +53,14 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 Plug 'itchyny/lightline.vim'
-Plug '/usr/local/bin/fzf'
+Plug '/home/markus/repos/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'majutsushi/tagbar'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
+Plug 'w0rp/ale'
+Plug 'rust-lang/rust.vim'
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 "=========DEOPLETE===========
@@ -79,13 +80,15 @@ call deoplete#custom#source('LanguageClient',
 let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'cpp': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
-    \ 'c': ['/usr/local/bin/cquery', '--log-file=/tmp/cq.log', '--init={"cacheDirectory":"/tmp/cquery/"}'],
+    \ 'cpp': ['clangd-7'],
+    \ 'c': ['clangd-7'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
+    \ 'javascript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
+    \ 'typescript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
     \ }
 let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/markusakesson/.config/nvim/settings.json'
+let g:LanguageClient_settingsPath = '/home/markus/.config/nvim/settings.json'
 let g:LanguageClient_hasSnippetSupport = 0
 set completefunc=LanguageClient#complete
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
@@ -102,21 +105,38 @@ nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
 
+"========== Rust.vim ============
+let g:rustfmt_autosave = 1
+
+"========== ALE =================
+let g:ale_lint_text_changed = 'never'
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 0
+let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+let g:ale_fixers = {
+\'*': ['remove_trailing_lines', 'trim_whitespace'],
+\'python3': ['autopep8', 'yapf'],
+\'python': ['autopep8', 'yapf'],
+\'rust' : ['rustfmt'],
+\}
+
+let g:ale_linters = {
+\'python3': [ 'pylint'],
+\'python': [ 'pylint'],
+\'rust' : ['rls', 'cargo'],
+\}
+
 "========== Echo doc ============
 let g:echodoc_enable_at_startup = 1
 
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
-nnoremap <leader>f :Lines<cr>
+nnoremap <leader>f :BLines<cr>
+nnoremap <leader>F :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
-
-nnoremap <leader>t :TagbarToggle<cr>
-
-"========Neosnippets=====
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+nnoremap <leader>t :BTags<cr>
+nnoremap <leader>T :Tags<cr>
 
 " For conceal markers.
 if has('conceal')

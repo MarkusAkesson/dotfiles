@@ -1,0 +1,22 @@
+#! /bin/bash
+
+# set wallpaper
+feh --bg-fill /home/markus/.wallpapers/spa2017.jpeg
+
+# make java applications behave nice within dwm
+AWT_TOOLKIT=MToolkit
+export AWT_TOOLKIT
+wmname LG3D
+
+# statusbar loop
+while true; do
+    xsetroot -name "$(rstatus)"
+    sleep 1m # update every minute
+done &
+
+# start dwm in a loop to enable restarts
+while true; do
+    # Log std error to a file
+    dwm 2> ~/.dwm.log
+done
+
