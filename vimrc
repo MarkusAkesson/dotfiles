@@ -1,8 +1,4 @@
-syntax on
-set noshowmode
-set hidden
-set signcolumn=yes
-set mouse=a
+" Default indent options
 set autoindent
 set smartindent
 set shiftround
@@ -11,29 +7,77 @@ set softtabstop=4
 set tabstop=4
 set expandtab
 set smarttab
+
+" Sidecol numbers
 set number
 set relativenumber
-"set t_Co=256
-set splitright
-set splitbelow
-set textwidth=80
-"set termguicolors
-set completeopt+=preview
+
+" Buffers
+set splitright " horizontal splits open right of the current window
+set splitbelow " vertical splits open below the current window
+
+
+" Colors
+" set t_Co=256
+" set termguicolors
+
+" clipboard
+set clipboard=unnamedplus " enable system clipboard
+
+" Misc
+syntax on
+" set textwidth=80
+" set noshowmode
+set hidden " hide file, dont close it on file switch
+set signcolumn=yes " always draw the signcolumn
+set mouse=a
+set completeopt=longest,menuone,noinsert
+"set completeopt+=menu,longest
+"set completeopt-=preview  " Disable the preview window during the autocomplete process
 set backspace=indent,eol,start
 set rtp+=/home/markus/repos/fzf
 set cmdheight=2
-set shortmess+=c
+set shortmess+=c " Dont show the "math xx of xx" or other messages during autocomplete
+set autoread " automatically update buffer when file changed externally
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 let mapleader=","
 
-" linux c kernel style
-au FileType c,h setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
+" Go to previous and next in quickfix list
+nnoremap [q :cprevious<CR>
+nnoremap ]q :cnext<CR>
+
+" Insert blanline above or below
+nnoremap oo o<ESC>
+nnoremap OO O<ESC>
+
+" reload init and give a message
+nnoremap <silent> <leader>lv :so $MYVIMRC<cr>
+
+" Edit vimrc in a vertical split
+nnoremap <silent> <leader>ev :edit ~/.vimrc<cr>
+
+" when completion menu is shown, use <cr> to selct an item
+" and do not add a newline
+" when not in completion menu cr bejaves as expected
+inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("<\<cr>"))
+
+""""" Language settings
+
+" asm settings
 au FileType asm setlocal ft=nasm
 
+
+"""""" Plugins
+
+" Auto install vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    "autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin()
@@ -58,28 +102,42 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 call plug#end()
 
 "=========DEOPLETE===========
 set runtimepath+=~/.vim/plugged/deoplete.nvim/
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
-endif
-call deoplete#custom#source('_',
-    \ 'disabled_syntaxes', ['Comment', 'String'])
+let g:deoplete#enable_at_startup=1
+let g:deoplete#enable_smart_case=1
+let g:deoplete#enable_refresh_always=0
+let g:deoplte#max_abbr_width=0
+let g:deoplte#max_menu_width=0
+"if !exists('g:deoplete#omni#input_patterns')
+"    let g:deoplete#omni#input_patterns = {}
+"endif
+let g:deoplete#sources = {}
+"call deoplete#custom#source('_',
+"    \ 'disabled_syntaxes', ['Comment', 'String'])
 call deoplete#custom#source('LanguageClient',
             \ 'min_pattern_length',
             \ 2)
 
-"=========Language-client Neovim=================
-let g:LanguageClient_autoStart = 1
+"==========Neosnippets==========
+let g:neosnippet#enable_completed_snippet=1
+let g:neosnippet#enable_complete_done=1
+
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+
+"==========Language-client Neovim=================
+let g:LanguageClient_autoStart=1
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+    \ 'rust': ['ra_lsp_server'],
     \ 'cpp': ['clangd-7'],
     \ 'c': ['clangd-7'],
     \ 'python': ['pyls'],
@@ -87,11 +145,9 @@ let g:LanguageClient_serverCommands = {
     \ 'javascript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
     \ 'typescript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
     \ }
-let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/markus/.config/nvim/settings.json'
-let g:LanguageClient_hasSnippetSupport = 0
-set completefunc=LanguageClient#complete
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
+let g:LanguageClient_hasSnippetSupport=1
+"
 " use tab to forward cycle
 inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " use tab to backward cycle
@@ -107,6 +163,7 @@ nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
 
 "========== Rust.vim ============
 let g:rustfmt_autosave = 1
+let g:rust_conceal = 1
 
 "========== ALE =================
 let g:ale_lint_text_changed = 'never'
@@ -128,6 +185,7 @@ let g:ale_linters = {
 
 "========== Echo doc ============
 let g:echodoc_enable_at_startup = 1
+let g:echodoc#type = 'signature'
 
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
@@ -137,11 +195,6 @@ nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 
 "========Statusline=======
 let g:lightline = {
