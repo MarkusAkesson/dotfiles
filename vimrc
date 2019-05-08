@@ -43,6 +43,7 @@ set autoread " automatically update buffer when file changed externally
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+set timeoutlen=200
 
 let mapleader=","
 
@@ -63,7 +64,7 @@ nnoremap <silent> <leader>ev :edit ~/.vimrc<cr>
 " when completion menu is shown, use <cr> to selct an item
 " and do not add a newline
 " when not in completion menu cr bejaves as expected
-inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("<\<cr>"))
+inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("\<cr>"))
 
 """"" Language settings
 
@@ -83,15 +84,6 @@ endif
 call plug#begin()
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'joshdick/onedark.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -102,44 +94,38 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
-"Plug 'w0rp/ale'
+Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'majutsushi/tagbar'
+
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-ultisnips'
 call plug#end()
 
-"=========DEOPLETE===========
-set runtimepath+=~/.vim/plugged/deoplete.nvim/
-let g:deoplete#enable_at_startup=1
-let g:deoplete#enable_smart_case=1
-let g:deoplete#enable_refresh_always=0
-let g:deoplte#max_abbr_width=0
-let g:deoplte#max_menu_width=0
-"if !exists('g:deoplete#omni#input_patterns')
-"    let g:deoplete#omni#input_patterns = {}
-"endif
-let g:deoplete#sources = {}
-"call deoplete#custom#source('_',
-"    \ 'disabled_syntaxes', ['Comment', 'String'])
-call deoplete#custom#source('LanguageClient',
-            \ 'min_pattern_length',
-            \ 2)
+"========== ncm2 =============
+autocmd BufEnter * call ncm2#enable_for_buffer()
 
-"==========Neosnippets==========
-let g:neosnippet#enable_completed_snippet=1
-let g:neosnippet#enable_complete_done=1
-
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+"let g:UltiSnipsExpandTrigger="<c-y>"
+" Press enter key to trigger snippet expansion
+" The parameters are the same as `:help feedkeys()
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+let g:UltiSnipsJumpForwardTrigger="<c-k>"
+let g:UltiSnipsJumpBackwardTrigger="<c-j>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
 
 "==========Language-client Neovim=================
 let g:LanguageClient_autoStart=1
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['ra_lsp_server'],
-    \ 'cpp': ['clangd-7'],
-    \ 'c': ['clangd-7'],
+    \ 'cpp': ['clangd'],
+    \ 'c': ['clangd'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
     \ 'javascript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
@@ -147,7 +133,7 @@ let g:LanguageClient_serverCommands = {
     \ }
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
 let g:LanguageClient_hasSnippetSupport=1
-"
+
 " use tab to forward cycle
 inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " use tab to backward cycle
@@ -195,6 +181,9 @@ nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
+
+"==========Tagbar==========
+nmap <leader>ct :TagbarToggle<CR>
 
 "========Statusline=======
 let g:lightline = {
