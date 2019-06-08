@@ -16,8 +16,8 @@ set relativenumber
 set splitright " horizontal splits open right of the current window
 set splitbelow " vertical splits open below the current window
 
-
 " Colors
+syntax on
 " set t_Co=256
 " set termguicolors
 
@@ -25,14 +25,12 @@ set splitbelow " vertical splits open below the current window
 set clipboard=unnamedplus " enable system clipboard
 
 " Misc
-syntax on
 " set textwidth=80
 " set noshowmode
 set hidden " hide file, dont close it on file switch
 set signcolumn=yes " always draw the signcolumn
 set mouse=a
-set completeopt=longest,menuone,noinsert
-"set completeopt+=menu,longest
+set completeopt=longest,menuone,noinsert ",noselect
 "set completeopt-=preview  " Disable the preview window during the autocomplete process
 set backspace=indent,eol,start
 set rtp+=/home/markus/repos/fzf
@@ -64,13 +62,12 @@ nnoremap <silent> <leader>ev :edit ~/.vimrc<cr>
 " when completion menu is shown, use <cr> to selct an item
 " and do not add a newline
 " when not in completion menu cr bejaves as expected
-inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("\<cr>"))
+" inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("\<cr>"))
 
 """"" Language settings
 
 " asm settings
 au FileType asm setlocal ft=nasm
-
 
 """""" Plugins
 
@@ -106,16 +103,23 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 call plug#end()
 
 "========== ncm2 =============
 autocmd BufEnter * call ncm2#enable_for_buffer()
+"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-"let g:UltiSnipsExpandTrigger="<c-y>"
+" let g:UltiSnipsExpandTrigger="<c-y>"
 " Press enter key to trigger snippet expansion
 " The parameters are the same as `:help feedkeys()
-inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+"inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-j>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
@@ -128,21 +132,17 @@ let g:LanguageClient_serverCommands = {
     \ 'c': ['clangd'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
-    \ 'javascript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
-    \ 'typescript': ['/home/markus/repos/javascript-typescript-langserver/lib/language-server-stdio'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'typescript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['/usr/local/bin/javascript-typescript-stdio'],
     \ }
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
+let g:LanguageClient_diagnosticsEnable=0
 let g:LanguageClient_hasSnippetSupport=1
-
-" use tab to forward cycle
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" use tab to backward cycle
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
@@ -161,12 +161,16 @@ let g:ale_fixers = {
 \'python3': ['autopep8', 'yapf'],
 \'python': ['autopep8', 'yapf'],
 \'rust' : ['rustfmt'],
+\'javascript': [ 'eslint'],
+\'typescript': [ 'eslint'],
 \}
 
 let g:ale_linters = {
 \'python3': [ 'pylint'],
 \'python': [ 'pylint'],
 \'rust' : ['rls', 'cargo'],
+\'javascript': [ 'eslint'],
+\'typescript': [ 'eslint'],
 \}
 
 "========== Echo doc ============
@@ -197,7 +201,6 @@ let g:lightline = {
 "colorscheme nord
 
 "========Colorscheme OneDark======
-syntax on
 if (has("nvim"))
 "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
