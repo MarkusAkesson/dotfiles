@@ -9,7 +9,7 @@ set -Ux _JAVA_AWT_WN_NONPARENTING 1
 set -Ux AWT_TOOLKIT MToolkit
 wmname LG3D
 
-set -Ux GOPATH $HOME/Programming/go
+set -Ux GOPATH /me2/repos/go
 
 alias vim nvim
 
@@ -31,3 +31,5 @@ set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 
 # Default rusflags, generates faster binaries
 set -Ux RUSTFLAGS "-C target-cpu=native"
+
+eval (starship init fish)

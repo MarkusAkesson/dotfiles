@@ -65,6 +65,7 @@ nnoremap <silent> <leader>ev :edit ~/.vimrc<cr>
 " inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("\<cr>"))
 
 """"" Language settings
+au FileType cpp setlocal shiftwidth=2 softtabstop=2 tabstop=2
 
 " asm settings
 au FileType asm setlocal ft=nasm
@@ -94,8 +95,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'w0rp/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
-Plug 'majutsushi/tagbar'
-
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'ncm2/ncm2'
@@ -105,12 +104,14 @@ Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'liuchengxu/vista.vim'
+Plug 'rhysd/vim-clang-format'
 call plug#end()
 
 "========== ncm2 =============
 autocmd BufEnter * call ncm2#enable_for_buffer()
-"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
-inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+"inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -118,8 +119,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " let g:UltiSnipsExpandTrigger="<c-y>"
 " Press enter key to trigger snippet expansion
 " The parameters are the same as `:help feedkeys()
-"inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
-let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+" let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-j>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
@@ -180,19 +181,22 @@ let g:echodoc#type = 'signature'
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
 nnoremap <leader>f :BLines<cr>
-nnoremap <leader>F :Lines<cr>
+nnoremap <leader>L :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
 nnoremap <leader>t :BTags<cr>
 nnoremap <leader>T :Tags<cr>
 
-"==========Tagbar==========
-nmap <leader>ct :TagbarToggle<CR>
-
-"========Statusline=======
-let g:lightline = {
-      \ 'colorscheme': 'onedark',
-      \ }
+"========== Vista ==========
+nmap <leader>ct :Vista!!<CR>
+let g:vista_fzf_preview = ['right:50%']
+"========== Clang-Format ==========
+" Google is the default style guide to follow
+"let g:clang_format#code_style = "google"
+autocmd FileType c,cpp nnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp vnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp ClangFormatAutoEnable
+nmap <Leader>C :ClangFormatAutoToggle<CR>
 
 "========Colorscheme Nord======
 "let g:nord_comment_brightness = 20
@@ -204,6 +208,7 @@ let g:lightline = {
 if (has("nvim"))
 "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    set termguicolors
 endif
 "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
 "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
@@ -213,5 +218,9 @@ if (has("+termguicolors"))
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors
 endif
-let g:onedark_termcolors=16
+let g:onedark_termcolors=256
+let g:lightline = {
+  \ 'colorscheme': 'onedark',
+  \ }
+
 colorscheme onedark
