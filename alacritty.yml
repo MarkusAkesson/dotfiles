@@ -41,19 +41,19 @@ draw_bold_text_with_bright_colors: true
 font:
   # The normal (roman) font face to use.
   normal:
-    family: Menlo
+    family: Fira Mono for Powerline
     # Style can be specified to pick a specific face.
-    # style: Regular
+    style: Regular
 
   # The bold font face
   bold:
-    family: Menlo
+    family: Fira Mono for Powerline
     # Style can be specified to pick a specific face.
     # style: Bold
 
   # The italic font face
   italic:
-    family: Menlo
+    family: Fira Mono for Powerline
     # Style can be specified to pick a specific face.
     # style: Italic
 
@@ -224,7 +224,7 @@ hide_cursor_when_typing: false
 # - Block
 # - Underline
 # - Beam
-cursor_style: Block
+cursor_style: Beam
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -377,4 +377,3 @@ key_bindings:
   - { key: F10,      mods: Command, chars: "\x1b[21;3~"                  }
   - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
   - { key: F12,      mods: Command, chars: "\x1b[24;3~"                  }
-
