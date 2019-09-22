@@ -1,7 +1,7 @@
 set PATH /usr/local/gcc-9.1/bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $HOME/bin $PATH
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LIBRARY_PATH "$LIBRARY_PATH
-set -Ux LD_LIBRARY_PATH /usr/local/gcc-9.1/lib64 $LD_LIBRARY_PATH
+set LD_LIBRARY_PATH /usr/local/gcc-9.1/lib64 $LD_LIBRARY_PATH
 set -Ux EDITOR nvim
 
 # make Java applications happy within DWM
@@ -13,10 +13,14 @@ set -Ux GOPATH /me2/repos/go
 
 alias vim nvim
 
+# Cmd aliases
 alias aceproxy "docker run -t -p 8000:8000 ikatson/aceproxy"
 alias efishrc "nvim ~/.config/fish/config.fish"
 alias evimrc "nvim ~/.vimrc"
 alias eterm "nvim ~/.config/alacritty/alacritty.yml"
+alias ls "ls -hAl --color"
+
+# Launch aliases
 alias cutter "~/bin/Cutter-v1.8.1-x64.Linux.AppImage"
 alias ghidra "~/repos/ghidra_9.0.1/ghidraRun"
 alias matlab "/usr/local/MATLAB/R2019a/bin/matlab"
@@ -32,4 +36,5 @@ set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 # Default rusflags, generates faster binaries
 set -Ux RUSTFLAGS "-C target-cpu=native"
 
+# Launch the starship prompt
 eval (starship init fish)

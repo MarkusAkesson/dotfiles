@@ -136,6 +136,7 @@ let g:LanguageClient_serverCommands = {
     \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
     \ 'typescript': ['/usr/local/bin/javascript-typescript-stdio'],
     \ 'javascript.jsx': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'scala' :[ 'metals-vim'],
     \ }
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
 let g:LanguageClient_diagnosticsEnable=0
