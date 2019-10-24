@@ -44,6 +44,7 @@ endif
 set timeoutlen=200
 
 let mapleader=","
+let localleader ="\\"
 
 " Go to previous and next in quickfix list
 nnoremap [q :cprevious<CR>
@@ -65,10 +66,17 @@ nnoremap <silent> <leader>ev :edit ~/.vimrc<cr>
 " inoremap <expr> <cr> ((pumvisible())?("\<C-Y>"):("\<cr>"))
 
 """"" Language settings
+" cpp
 au FileType cpp setlocal shiftwidth=2 softtabstop=2 tabstop=2
 
 " asm settings
 au FileType asm setlocal ft=nasm
+
+au FileType tex setlocal spell spelllang=en_us
+let g:Tex_BibtexFlavor='biber'
+let g:Tex_DefaultTargetFormat='pdf'
+let g:Tex_CompileRule_pdf='tectonic $*'
+let g:vimtex_compiler_method='tectonic'
 
 """""" Plugins
 
@@ -92,7 +100,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/echodoc'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'junegunn/goyo.vim'
-Plug 'w0rp/ale'
+"Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'SirVer/ultisnips'
@@ -102,10 +110,10 @@ Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
 Plug 'liuchengxu/vista.vim'
 Plug 'rhysd/vim-clang-format'
+Plug 'lervag/vimtex'
+Plug 'vim-syntastic/syntastic'
 call plug#end()
 
 "========== ncm2 =============
@@ -133,10 +141,6 @@ let g:LanguageClient_serverCommands = {
     \ 'c': ['clangd'],
     \ 'python': ['pyls'],
     \ 'python3': ['pyls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'typescript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'scala' :[ 'metals-vim'],
     \ }
 set formatexpr=LanguageClient_textDocument_rangeFormatting()
 let g:LanguageClient_diagnosticsEnable=0
@@ -154,26 +158,32 @@ let g:rustfmt_autosave = 1
 let g:rust_conceal = 1
 
 "========== ALE =================
-let g:ale_lint_text_changed = 'never'
-let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 0
-let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
-let g:ale_fixers = {
-\'*': ['remove_trailing_lines', 'trim_whitespace'],
-\'python3': ['autopep8', 'yapf'],
-\'python': ['autopep8', 'yapf'],
-\'rust' : ['rustfmt'],
-\'javascript': [ 'eslint'],
-\'typescript': [ 'eslint'],
-\}
+"let g:ale_lint_text_changed = 'never'
+"let g:ale_fix_on_save = 1
+"let g:ale_completion_enabled = 0
+"let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+"let g:ale_fixers = {
+"\'*': ['remove_trailing_lines', 'trim_whitespace'],
+"\'python3': ['autopep8', 'yapf'],
+"\'python': ['autopep8', 'yapf'],
+"\'rust' : ['rustfmt'],
+"\}
+"
+"let g:ale_linters = {
+"\'python3': [ 'pylint'],
+"\'python': [ 'pylint'],
+"\'rust' : ['rls', 'cargo', 'rustc'],
+"\}
 
-let g:ale_linters = {
-\'python3': [ 'pylint'],
-\'python': [ 'pylint'],
-\'rust' : ['rls', 'cargo'],
-\'javascript': [ 'eslint'],
-\'typescript': [ 'eslint'],
-\}
+"========== Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFLag()}
+set statusline+=%*
+
+let g:syntastic_always_poopulate_loc_list = 1
+let g:syntastic_auto_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntatsic_check_on_wq = 0
 
 "========== Echo doc ============
 let g:echodoc_enable_at_startup = 1
@@ -199,13 +209,30 @@ autocmd FileType c,cpp vnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp ClangFormatAutoEnable
 nmap <Leader>C :ClangFormatAutoToggle<CR>
 
-"========Colorscheme Nord======
+"========== VimTex
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_view_method = 'zathura'
+augroup my_cm_setup
+    autocmd!
+    "autocmd BufEnter * call ncm2#enable_for_buffer()
+    autocmd Filetype tex call ncm2#register_source({
+        \ 'name': 'vimtex',
+        \ 'priority': 8,
+        \ 'scope': ['tex'],
+        \ 'mark': 'tex',
+        \ 'word_pattern': '\w+',
+        \ 'complete_pattern': g:vimtex#re#ncm2,
+        \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+        \ })
+augroup END
+
+"==========Colorscheme Nord======
 "let g:nord_comment_brightness = 20
 "let g:nord_italic_comments = 1
 "set background=dark
 "colorscheme nord
 
-"========Colorscheme OneDark======
+"==========Colorscheme OneDark======
 if (has("nvim"))
 "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1

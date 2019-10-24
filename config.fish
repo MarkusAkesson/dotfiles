@@ -18,7 +18,7 @@ alias aceproxy "docker run -t -p 8000:8000 ikatson/aceproxy"
 alias efishrc "nvim ~/.config/fish/config.fish"
 alias evimrc "nvim ~/.vimrc"
 alias eterm "nvim ~/.config/alacritty/alacritty.yml"
-alias ls "ls -hAl --color"
+alias ls "ls -hl --color"
 
 # Launch aliases
 alias cutter "~/bin/Cutter-v1.8.1-x64.Linux.AppImage"
