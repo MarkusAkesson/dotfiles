@@ -1,8 +1,5 @@
 #! /bin/bash
 
-# set wallpaper
-feh --bg-fill /home/markus/.wallpapers/spa2017.jpeg
-
 # make java applications behave nice within dwm
 AWT_TOOLKIT=MToolkit
 export AWT_TOOLKIT
@@ -17,6 +14,8 @@ done &
 # start dwm in a loop to enable restarts
 while true; do
     # Log std error to a file
+    # set wallpaper
+    feh --bg-fill /home/markus/Pictures/2560x1440-light-blue-solid-color-background.jpg
     dwm 2> ~/.dwm.log
 done
 

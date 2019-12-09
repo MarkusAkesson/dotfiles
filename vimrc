@@ -75,8 +75,6 @@ au FileType asm setlocal ft=nasm
 au FileType tex setlocal spell spelllang=en_us
 let g:Tex_BibtexFlavor='biber'
 let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_CompileRule_pdf='tectonic $*'
-let g:vimtex_compiler_method='tectonic'
 
 """""" Plugins
 
@@ -201,6 +199,7 @@ nnoremap <leader>T :Tags<cr>
 "========== Vista ==========
 nmap <leader>ct :Vista!!<CR>
 let g:vista_fzf_preview = ['right:50%']
+
 "========== Clang-Format ==========
 " Google is the default style guide to follow
 "let g:clang_format#code_style = "google"

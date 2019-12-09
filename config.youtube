@@ -1,0 +1,18 @@
+# Archive file
+--download-archive "~/Dropbox/Videos/youtube/archive.log"
+
+# get best video and audio
+-f bestvideo+bestaudio
+
+# Save all videos in Dropbox/videos/youtube
+# Output format
+--merge-output-format mkv -o "~/Dropbox/Videos/youtube/%(playlist)s/%(playlist_index)s - %(title)s - %(id)s.%(ext)s"
+
+# Use .netrc file for authentication
+--netrc
+
+# Keep going incase of errors
+-i
+
+# embed thumbnail
+--embed-thumbnail
