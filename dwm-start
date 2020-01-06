@@ -4,6 +4,8 @@
 AWT_TOOLKIT=MToolkit
 export AWT_TOOLKIT
 wmname LG3D
+# Detect multiple displays
+xrandr --auto
 
 # statusbar loop
 while true; do

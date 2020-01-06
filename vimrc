@@ -39,7 +39,7 @@ set shortmess+=c " Dont show the "math xx of xx" or other messages during autoco
 set autoread " automatically update buffer when file changed externally
 " For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+  "set conceallevel=2 concealcursor=niv
 endif
 set timeoutlen=200
 
@@ -72,6 +72,10 @@ au FileType cpp setlocal shiftwidth=2 softtabstop=2 tabstop=2
 " asm settings
 au FileType asm setlocal ft=nasm
 
+" Markdown
+au FileType markdown setlocal spell spelllang=en_us
+"
+" TeX
 au FileType tex setlocal spell spelllang=en_us
 let g:Tex_BibtexFlavor='biber'
 let g:Tex_DefaultTargetFormat='pdf'
