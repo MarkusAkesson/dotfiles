@@ -29,7 +29,7 @@ alias ssh "~/.bin/ssh-ident"
 #alias matlab "/usr/local/MATLAB/R2019a/bin/matlab"
 #alias intellij "~/bin/idea-IC-191.6707.61/bin/idea.sh"
 
-set -U FZF_DEFAULT_COMMAND 'rg --files --color auto --ignore --hidden --glob "!.git/*"'
+set -Ux FZF_DEFAULT_COMMAND 'rg --files --color auto --ignore --hidden  --glob "!.git/*"'
 #set -Ux FZF_DEFAULT_COMMAND "fd --type file --color=always"
 #set -Ux FZF_FIND_FILE_COMMAND "fd --type file --color=always"
 set -Ux FZF_DEFAULT_OPTS '--ansi'

@@ -49,6 +49,8 @@ let localleader ="\\"
 " Go to previous and next in quickfix list
 nnoremap [q :cprevious<CR>
 nnoremap ]q :cnext<CR>
+nnoremap <leader>cq :cclose<cr>
+nnoremap <leader>co :copen<cr>
 
 " Insert blanline above or below
 nnoremap oo o<ESC>
@@ -76,6 +78,7 @@ au FileType asm setlocal ft=nasm
 au FileType markdown setlocal spell spelllang=en_us
 "
 " TeX
+autocmd BufNewFile,BufRead *.tex set filetype=tex
 au FileType tex setlocal spell spelllang=en_us
 let g:Tex_BibtexFlavor='biber'
 let g:Tex_DefaultTargetFormat='pdf'
@@ -206,7 +209,7 @@ let g:vista_fzf_preview = ['right:50%']
 
 "========== Clang-Format ==========
 " Google is the default style guide to follow
-"let g:clang_format#code_style = "google"
+let g:clang_format#code_style = "google"
 autocmd FileType c,cpp nnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp vnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
 autocmd FileType c,cpp ClangFormatAutoEnable
