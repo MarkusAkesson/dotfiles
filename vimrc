@@ -30,7 +30,7 @@ set clipboard=unnamedplus " enable system clipboard
 set hidden " hide file, dont close it on file switch
 set signcolumn=yes " always draw the signcolumn
 set mouse=a
-set completeopt=longest,menuone,noinsert ",noselect
+set completeopt=menuone,noinsert,noselect
 "set completeopt-=preview  " Disable the preview window during the autocomplete process
 set backspace=indent,eol,start
 set rtp+=/home/markus/repos/fzf
@@ -38,9 +38,8 @@ set cmdheight=2
 set shortmess+=c " Dont show the "math xx of xx" or other messages during autocomplete
 set autoread " automatically update buffer when file changed externally
 " For conceal markers.
-if has('conceal')
-  "set conceallevel=2 concealcursor=niv
-endif
+au FileType rust,c,cpp,python setlocal conceallevel=2 concealcursor=niv
+
 set timeoutlen=200
 
 let mapleader=","
@@ -95,10 +94,6 @@ endif
 call plug#begin()
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'joshdick/onedark.vim'
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
 Plug 'itchyny/lightline.vim'
 Plug '/home/markus/repos/fzf'
 Plug 'junegunn/fzf.vim'
@@ -108,77 +103,94 @@ Plug 'junegunn/goyo.vim'
 "Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
-Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-ultisnips'
 Plug 'liuchengxu/vista.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'lervag/vimtex'
 Plug 'vim-syntastic/syntastic'
+Plug 'neovim/nvim-lsp'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'Shougo/deoplete-lsp'
+Plug 'Shougo/neosnippet.vim'
 call plug#end()
 
-"========== ncm2 =============
-autocmd BufEnter * call ncm2#enable_for_buffer()
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
-"inoremap <silent> <expr> <CR> pumvisible() ? ncm2_ultisnips#expand_or("\<CR>", 'n') : "\<CR>"
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"========== LSP
+autocmd Filetype rust,python,c,cpp setl omnifunc=v:lua.vim.lsp.omnifunc
+"packadd nvim-lsp
+lua << EOF
+    local nvim_lsp = require('nvim_lsp')
+    require'nvim_lsp'.rust_analyzer.setup{}
+    require'nvim_lsp'.clangd.setup{}
+    require'nvim_lsp'.pyls.setup{}
+EOF
+
+nnoremap <silent> <leader>dc <cmd>:lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <leader>gd <cmd>:lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <leader>h  <cmd>:lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <leader>i  <cmd>:lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <leader>s  <cmd>:lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <leader>K  <cmd>:lua vim.lsp.buf.type_definition()<CR>
+
+"========== Deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+call deoplete#custom#option('ignore_sources', {'_': ['around', 'buffer']})
+" maximum candidate window length
+call deoplete#custom#source('_', 'max_menu_width', 80)
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+"========== Neosnippet
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" let g:UltiSnipsExpandTrigger="<c-y>"
-" Press enter key to trigger snippet expansion
-" The parameters are the same as `:help feedkeys()
-inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
-" let g:UltiSnipsExpandTrigger = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsExpandTrigger="<c-y>"
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-j>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
-
-"==========Language-client Neovim=================
-let g:LanguageClient_autoStart=1
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['ra_lsp_server'],
-    \ 'cpp': ['clangd'],
-    \ 'c': ['clangd'],
-    \ 'python': ['pyls'],
-    \ 'python3': ['pyls'],
-    \ }
-set formatexpr=LanguageClient_textDocument_rangeFormatting()
-let g:LanguageClient_diagnosticsEnable=0
-let g:LanguageClient_hasSnippetSupport=1
-
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> gr :call LanguageClient#textDocument_rename()<CR>
 
 "========== Rust.vim ============
 let g:rustfmt_autosave = 1
 let g:rust_conceal = 1
 
 "========== ALE =================
-"let g:ale_lint_text_changed = 'never'
-"let g:ale_fix_on_save = 1
-"let g:ale_completion_enabled = 0
-"let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
-"let g:ale_fixers = {
-"\'*': ['remove_trailing_lines', 'trim_whitespace'],
-"\'python3': ['autopep8', 'yapf'],
-"\'python': ['autopep8', 'yapf'],
-"\'rust' : ['rustfmt'],
-"\}
+let g:ale_lint_text_changed = 'never'
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 0
+let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
+let g:ale_fixers = {
+\'*': ['remove_trailing_lines', 'trim_whitespace'],
+\'python3': ['autopep8', 'yapf'],
+\'python': ['autopep8', 'yapf'],
+\}
 "
 "let g:ale_linters = {
-"\'python3': [ 'pylint'],
-"\'python': [ 'pylint'],
-"\'rust' : ['rls', 'cargo', 'rustc'],
-"\}
+\'python3': [ 'pylint'],
+\'python': [ 'pylint'],
+\}
 
 "========== Syntastic
 set statusline+=%#warningmsg#
@@ -188,7 +200,7 @@ set statusline+=%*
 let g:syntastic_always_poopulate_loc_list = 1
 let g:syntastic_auto_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntatsic_check_on_wq = 0
+let g:syntatsic_check_on_wq = 1
 
 "========== Echo doc ============
 let g:echodoc_enable_at_startup = 1
@@ -218,19 +230,19 @@ nmap <Leader>C :ClangFormatAutoToggle<CR>
 "========== VimTex
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'zathura'
-augroup my_cm_setup
-    autocmd!
-    "autocmd BufEnter * call ncm2#enable_for_buffer()
-    autocmd Filetype tex call ncm2#register_source({
-        \ 'name': 'vimtex',
-        \ 'priority': 8,
-        \ 'scope': ['tex'],
-        \ 'mark': 'tex',
-        \ 'word_pattern': '\w+',
-        \ 'complete_pattern': g:vimtex#re#ncm2,
-        \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-        \ })
-augroup END
+"aaugroup my_cm_setup
+"    autocmd!
+"    "autocmd BufEnter * call ncm2#enable_for_buffer()
+"    autocmd Filetype tex call ncm2#register_source({
+"        \ 'name': 'vimtex',
+"        \ 'priority': 8,
+"        \ 'scope': ['tex'],
+"        \ 'mark': 'tex',
+"        \ 'word_pattern': '\w+',
+"        \ 'complete_pattern': g:vimtex#re#ncm2,
+"        \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+"        \ })
+"augroup END
 
 "==========Colorscheme Nord======
 "let g:nord_comment_brightness = 20
