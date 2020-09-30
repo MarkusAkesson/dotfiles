@@ -7,6 +7,7 @@ set softtabstop=4
 set tabstop=4
 set expandtab
 set smarttab
+filetype plugin indent on
 
 " Sidecol numbers
 set number
@@ -22,7 +23,7 @@ syntax on
 " set termguicolors
 
 " clipboard
-set clipboard=unnamedplus " enable system clipboard
+set clipboard+=unnamedplus " enable system clipboard
 
 " Misc
 " set textwidth=80
@@ -33,10 +34,11 @@ set mouse=a
 set completeopt=menuone,noinsert,noselect
 "set completeopt-=preview  " Disable the preview window during the autocomplete process
 set backspace=indent,eol,start
-set rtp+=/home/markus/repos/fzf
+set rtp+=/usr/bin/fzf
 set cmdheight=2
 set shortmess+=c " Dont show the "math xx of xx" or other messages during autocomplete
-set autoread " automatically update buffer when file changed externally
+"set autoread " automatically update buffer when file changed externally
+"
 " For conceal markers.
 au FileType rust,c,cpp,python setlocal conceallevel=2 concealcursor=niv
 
@@ -75,12 +77,13 @@ au FileType asm setlocal ft=nasm
 
 " Markdown
 au FileType markdown setlocal spell spelllang=en_us
-"
+
 " TeX
 autocmd BufNewFile,BufRead *.tex set filetype=tex
 au FileType tex setlocal spell spelllang=en_us
 let g:Tex_BibtexFlavor='biber'
 let g:Tex_DefaultTargetFormat='pdf'
+let g:tex_flavor = 'latex'
 
 """""" Plugins
 
@@ -92,119 +95,103 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin()
-Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
+"Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
 Plug '/home/markus/repos/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'Shougo/echodoc'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'junegunn/goyo.vim'
-"Plug 'dense-analysis/ale'
+Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
-Plug 'leafgarland/typescript-vim'
-Plug 'honza/vim-snippets'
 Plug 'liuchengxu/vista.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'lervag/vimtex'
-Plug 'vim-syntastic/syntastic'
 Plug 'neovim/nvim-lsp'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-Plug 'Shougo/deoplete-lsp'
-Plug 'Shougo/neosnippet.vim'
+Plug 'nvim-lua/diagnostic-nvim'
+Plug 'nvim-lua/completion-nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'tjdevries/lsp_extensions.nvim'
 call plug#end()
 
-"========== LSP
-autocmd Filetype rust,python,c,cpp setl omnifunc=v:lua.vim.lsp.omnifunc
-"packadd nvim-lsp
-lua << EOF
-    local nvim_lsp = require('nvim_lsp')
-    require'nvim_lsp'.rust_analyzer.setup{}
-    require'nvim_lsp'.clangd.setup{}
-    require'nvim_lsp'.pyls.setup{}
+" Configure LSP
+" https://github.com/neovim/nvim-lspconfig#rust_analyzer
+lua <<EOF
+
+-- nvim_lsp object
+local nvim_lsp = require'nvim_lsp'
+
+-- function to attach completion and diagnostics
+-- when setting up lsp
+local on_attach = function(client)
+    require'completion'.on_attach(client)
+    require'diagnostic'.on_attach(client)
+end
+
+-- Enable rust_analyzer
+require'nvim_lsp'.rust_analyzer.setup({ on_attach=on_attach })
+require'nvim_lsp'.clangd.setup({ on_attach=on_attach })
+require'nvim_lsp'.pyls.setup({ on_attach=on_attach })
+
 EOF
 
-nnoremap <silent> <leader>dc <cmd>:lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <leader>gd <cmd>:lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> <leader>h  <cmd>:lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> <leader>i  <cmd>:lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <leader>s  <cmd>:lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <leader>K  <cmd>:lua vim.lsp.buf.type_definition()<CR>
+" Code navigation shortcuts
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
-"========== Deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-call deoplete#custom#option('ignore_sources', {'_': ['around', 'buffer']})
-" maximum candidate window length
-call deoplete#custom#source('_', 'max_menu_width', 80)
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-"========== Neosnippet
-" Plugin key-mappings.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
 
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+" Visualize diagnostics
+let g:diagnostic_enable_virtual_text = 1
+let g:diagnostic_trimmed_virtual_text = '40'
+" Don't show diagnostics while in insert mode
+let g:diagnostic_insert_delay = 1
 
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" Set updatetime for CursorHold
+" 300ms of no cursor movement to trigger CursorHold
+set updatetime=300
+" Show diagnostic popup on cursor hold
+autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-y>"
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-j>"
-let g:UltiSnipsRemoveSelectModeMappings = 0
+" Goto previous/next diagnostic warning/error
+nnoremap <silent> g[ <cmd>PrevDiagnosticCycle<cr>
+nnoremap <silent> g] <cmd>NextDiagnosticCycle<cr>
+
+" Enable type inlay hints
+"autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *
+"\ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment" }
 
 "========== Rust.vim ============
 let g:rustfmt_autosave = 1
-let g:rust_conceal = 1
+"let g:rust_conceal = 1
 
 "========== ALE =================
 let g:ale_lint_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 0
-let g:ale_rust_cargo_use_clippy = executable('cargo-clippy')
 let g:ale_fixers = {
 \'*': ['remove_trailing_lines', 'trim_whitespace'],
 \'python3': ['autopep8', 'yapf'],
 \'python': ['autopep8', 'yapf'],
 \}
 "
-"let g:ale_linters = {
+let g:ale_linters = {
 \'python3': [ 'pylint'],
 \'python': [ 'pylint'],
 \}
-
-"========== Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFLag()}
-set statusline+=%*
-
-let g:syntastic_always_poopulate_loc_list = 1
-let g:syntastic_auto_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntatsic_check_on_wq = 1
-
-"========== Echo doc ============
-let g:echodoc_enable_at_startup = 1
-let g:echodoc#type = 'signature'
 
 "========== FZF =============
 nnoremap <c-p> :FZF<cr>
@@ -228,21 +215,18 @@ autocmd FileType c,cpp ClangFormatAutoEnable
 nmap <Leader>C :ClangFormatAutoToggle<CR>
 
 "========== VimTex
-let g:vimtex_compiler_progname = 'nvr'
+"let g:vimtex_compiler_progname = 'latexmk'
 let g:vimtex_view_method = 'zathura'
-"aaugroup my_cm_setup
-"    autocmd!
-"    "autocmd BufEnter * call ncm2#enable_for_buffer()
-"    autocmd Filetype tex call ncm2#register_source({
-"        \ 'name': 'vimtex',
-"        \ 'priority': 8,
-"        \ 'scope': ['tex'],
-"        \ 'mark': 'tex',
-"        \ 'word_pattern': '\w+',
-"        \ 'complete_pattern': g:vimtex#re#ncm2,
-"        \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
-"        \ })
-"augroup END
+let g:vimtex_compiler_latexmk = {
+    \ 'options' : [
+    \   '-pdf',
+    \   '-shell-escape',
+    \   '-verbose',
+    \   '-file-line-error',
+    \   '-synctex=1',
+    \   '-interaction=nonstopmode',
+    \ ],
+    \}
 
 "==========Colorscheme Nord======
 "let g:nord_comment_brightness = 20

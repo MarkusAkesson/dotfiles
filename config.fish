@@ -1,4 +1,4 @@
-set PATH $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $HOME/.bin $PATH
+set PATH $HOME/.bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $PATH
 set fish_function_path $fish_function_path /usr/share/powerline/fish
 
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
@@ -21,7 +21,7 @@ alias efishrc "nvim ~/.config/fish/config.fish"
 alias evimrc "nvim ~/.vimrc"
 alias eterm "nvim ~/.config/alacritty/alacritty.yml"
 alias ls "ls -hl --color"
-alias ssh "~/.bin/ssh-ident"
+alias gotop ytop
 
 # Launch aliases
 #alias cutter "~/bin/Cutter-v1.8.1-x64.Linux.AppImage"
@@ -37,7 +37,7 @@ set -Ux FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 
 # Default rusflags, generates faster binaries
-set -Ux RUSTFLAGS "-C target-cpu=native"
+# set -Ux RUSTFLAGS "-C target-cpu=native"
 
 # Enable powerline fonts
 # powerline-setup
