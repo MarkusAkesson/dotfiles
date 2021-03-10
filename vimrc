@@ -98,7 +98,7 @@ call plug#begin()
 "Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
-Plug '/home/markus/repos/fzf'
+Plug 'junegunn/fzf', { 'do' : { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dense-analysis/ale'
@@ -107,10 +107,11 @@ Plug 'liuchengxu/vista.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'lervag/vimtex'
 Plug 'neovim/nvim-lsp'
-Plug 'nvim-lua/diagnostic-nvim'
 Plug 'nvim-lua/completion-nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'tjdevries/lsp_extensions.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'morhetz/gruvbox'
 call plug#end()
 
 " Configure LSP
@@ -118,20 +119,42 @@ call plug#end()
 lua <<EOF
 
 -- nvim_lsp object
-local nvim_lsp = require'nvim_lsp'
+local nvim_lsp = require('lspconfig')
 
--- function to attach completion and diagnostics
--- when setting up lsp
+-- Enable diagnostics
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        -- Disable virtual text
+        virtual_text = false,
+
+        -- Show signs
+        signs = true,
+
+        -- Update while in insert mode
+        update_in_insert = false,
+    }
+)
+
+-- function to attach completion when setting up lsp
 local on_attach = function(client)
     require'completion'.on_attach(client)
-    require'diagnostic'.on_attach(client)
 end
 
 -- Enable rust_analyzer
-require'nvim_lsp'.rust_analyzer.setup({ on_attach=on_attach })
-require'nvim_lsp'.clangd.setup({ on_attach=on_attach })
-require'nvim_lsp'.pyls.setup({ on_attach=on_attach })
+require'lspconfig'.rust_analyzer.setup({ on_attach=on_attach })
+require'lspconfig'.clangd.setup({ on_attach=on_attach })
+require'lspconfig'.pyls.setup({ on_attach=on_attach })
 
+EOF
+
+" Configure TreeSitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = "maintained",
+        highlight = {
+            enable = true,
+    },
+}
 EOF
 
 " Code navigation shortcuts
@@ -144,6 +167,8 @@ nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>dn     <cmd>lua vim.lsp.diagnostic.goto_next { wrap = false }<CR>
+nnoremap <leader>dp     <cmd>lua vim.lsp.diagnostic.goto_prev { wrap = false }<CR>
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -164,7 +189,7 @@ let g:diagnostic_insert_delay = 1
 " 300ms of no cursor movement to trigger CursorHold
 set updatetime=300
 " Show diagnostic popup on cursor hold
-autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
+autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 " Goto previous/next diagnostic warning/error
 nnoremap <silent> g[ <cmd>PrevDiagnosticCycle<cr>
@@ -250,7 +275,7 @@ if (has("+termguicolors"))
 endif
 let g:onedark_termcolors=256
 let g:lightline = {
-  \ 'colorscheme': 'onedark',
+  \ 'colorscheme': 'gruvbox',
   \ }
 
-colorscheme onedark
+colorscheme gruvbox
