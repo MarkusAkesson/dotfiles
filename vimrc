@@ -16,15 +16,28 @@ set relativenumber
 "set t_Co=256
 set splitright
 set splitbelow
-set textwidth=80
+"set textwidth=80
 "set termguicolors
 set completeopt=noinsert,menuone,noselect
 set backspace=indent,eol,start
 set rtp+=/usr/local/opt/fzf
 set cmdheight=2
 let mapleader=","
+let localleader="\\"
 set shortmess+=c
+set autoread
 
+" Go to previous and next in quickfixlist
+
+nnoremap [q :cprevious<CR>
+nnoremap ]q :cnext<CR>
+" open or close the quickfixlist
+nnoremap <leader>cq :cclose<cr>
+nnoremap <leader>co :copen<cr>
+
+" Insert blankline above or below
+nnoremap oo o<ESC>
+nnoremap OO O<ESC>
 
 " linux c kernel style
 au FileType c setlocal autoindent noexpandtab tabstop=8 shiftwidth=8 colorcolumn=80
@@ -49,6 +62,17 @@ augroup END
 augroup filetype
   au! BufRead,BufNewFile *.ll     set filetype=llvm
 augroup END
+
+" Markdown
+au FileType markdown setlocal spell spelllang=en_us
+
+" TeX
+augroup filetype
+  au! BufRead,BufNewFile *tex* set filetype=tex
+augroup END
+au FileType tex setlocal spell spelllang=en_us
+let g:Tex_BibtexFlavor='biber'
+let g:Tex_DefaultTargetFormat='pdf'
 
 call plug#begin()
 Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
@@ -77,14 +101,15 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'rust-lang/rust.vim'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'lervag/vimtex'
+Plug 'vim-syntastic/syntastic'
+Plug 'liuchengxu/vista.vim'
 call plug#end()
 
 
 "=========ALE=================
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['eslint'],
-\   'rust': ['ra_lsp_server'],
 \}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 0
@@ -94,10 +119,10 @@ let g:ale_completion_enabled = 0
 autocmd BufEnter * call ncm2#enable_for_buffer()
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-"let g:UltiSnipsExpandTrigger="<c-y>"
+let g:UltiSnipsExpandTrigger="<c-y>"
 " Press enter key to trigger snippet expansion
 " The parameters are the same as `:help feedkeys()
-inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+"inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
 let g:UltiSnipsJumpForwardTrigger="<c-k>"
 let g:UltiSnipsJumpBackwardTrigger="<c-j>"
 let g:UltiSnipsRemoveSelectModeMappings = 0
@@ -143,16 +168,18 @@ nnoremap <leader>f :BLines<cr>
 nnoremap <leader>F :Lines<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>r :Rg<cr>
-nnoremap <leader>t :BTags<cr>
+nnoremap <leader>T :BTags<cr>
 
 "======== Rust.vim ======
 let g:rustfmt_autosave = 1
 
-
+"========== Vista
+nmap <leader>t :Vista!!<CR>
+let g:vista_fzf_preview = ['right:50%']
 
 " For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+  "set conceallevel=2 concealcursor=niv
 endif
 
 "========Statusline=======
@@ -161,8 +188,28 @@ let g:lightline = {
       \ }
 
 "=======Clang-format=====
-let g:clang_format#code_style="llvm"
-nnoremap <leader>c :ClangFormat<cr>
+let g:clang_format#code_style="google"
+autocmd FileType c,cpp nnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp vnoremap <buffer><Leader>c :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp ClangFormatAutoEnable
+nmap <Leader>C :ClangFormatAutoToggle<CR>
+
+"========== VimTex
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_view_method = 'zathura'
+augroup my_cm_setup
+    autocmd!
+    "autocmd BufEnter * call ncm2#enable_for_buffer()
+    autocmd Filetype tex call ncm2#register_source({
+        \ 'name': 'vimtex',
+        \ 'priority': 8,
+        \ 'scope': ['tex'],
+        \ 'mark': 'tex',
+        \ 'word_pattern': '\w+',
+        \ 'complete_pattern': g:vimtex#re#ncm2,
+        \ 'on_complete': ['ncm2#on_complete#omni', 'vimtex#complete#omnifunc'],
+        \ })
+augroup END
 
 "========Colorscheme Nord======
 "let g:nord_comment_brightness = 20
