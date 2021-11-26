@@ -1,5 +1,6 @@
-set PATH $HOME/.bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $PATH
+set PATH $HOME/.bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $PATH /opt/riscv/bin
 set fish_function_path $fish_function_path /usr/share/powerline/fish
+. $HOME/.config/fish/key-bindings.fish
 
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LIBRARY_PATH "$LIBRARY_PATH
@@ -22,9 +23,10 @@ alias evimrc "nvim ~/.vimrc"
 alias eterm "nvim ~/.config/alacritty/alacritty.yml"
 alias ls "ls -hl --color"
 alias gotop ytop
+alias youtube-dl yt-dlp
 
 # Launch aliases
-# alias ghidra "~/repos/ghidra_9.0.1/ghidraRun"
+alias ghidra "~/repos/ghidra/ghidra_10.0.4_PUBLIC/ghidraRun"
 alias cutter "~/.bin/Cutter-v1.12.0-x64.Linux.AppImage"
 
 # FZF
@@ -35,6 +37,9 @@ set -Ux FZF_DEFAULT_OPTS '--ansi'
 set -Ux FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 
+# Firefox build
+set -Ux MOZBUILD_STATE_PATH /me2/.mozbuild
+
 # Enable powerline fonts
 # powerline-setup
 
@@ -44,7 +49,8 @@ if status --is-interactive
 end
 
 # Dev
-set -Ux CC clang
-set -Ux CXX clang++
+set -Ux CC "sccache clang"
+set -Ux CXX "sccache clang++"
+
 # Launch the starship prompt
 starship init fish | source
