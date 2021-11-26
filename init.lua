@@ -39,6 +39,19 @@ require('packer').startup(function()
   use 'liuchengxu/vista.vim' -- View and serch LSP symbols and tags
 end)
 
+--Indent
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.shiftround = true
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.tabstop = 4
+vim.o.expandtab = true
+vim.o.smarttab = true
+
+vim.o.splitright = true
+vim.o.splitbelow = true
+
 --Incremental live completion (note: this is now a default on master)
 vim.o.inccommand = 'nosplit'
 
