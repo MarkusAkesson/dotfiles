@@ -19,7 +19,7 @@ alias vim nvim
 # Cmd aliases
 alias vim nvim
 alias efishrc "nvim ~/.config/fish/config.fish"
-alias evimrc "nvim ~/.vimrc"
+alias evimrc "nvim ~/.config/nvim/init.lua"
 alias eterm "nvim ~/.config/alacritty/alacritty.yml"
 alias ls "ls -hl --color"
 alias gotop ytop
