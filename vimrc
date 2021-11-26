@@ -143,7 +143,6 @@ end
 -- Enable rust_analyzer
 require'lspconfig'.rust_analyzer.setup({ on_attach=on_attach })
 require'lspconfig'.clangd.setup({ on_attach=on_attach })
-require'lspconfig'.pyls.setup({ on_attach=on_attach })
 
 EOF
 
@@ -252,12 +251,6 @@ let g:vimtex_compiler_latexmk = {
     \   '-interaction=nonstopmode',
     \ ],
     \}
-
-"==========Colorscheme Nord======
-"let g:nord_comment_brightness = 20
-"let g:nord_italic_comments = 1
-"set background=dark
-"colorscheme nord
 
 "==========Colorscheme OneDark======
 if (has("nvim"))
