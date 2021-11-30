@@ -1,3 +1,4 @@
+eval (/opt/homebrew/bin/brew shellenv)
 set PATH $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $PATH
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LDFLAGS "-L/usr/local/opt/llvm/lib"
@@ -19,3 +20,5 @@ set -Ux FZF_FIND_FILE_COMMAND "fd --type file --color=always"
 set -Ux FZF_DEFAULT_OPTS '--ansi'
 set -Ux FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
+
+starship init fish | source
