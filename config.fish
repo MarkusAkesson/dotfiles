@@ -13,7 +13,8 @@ alias vim nvim
 
 alias aceproxy "docker run -t -p 8000:8000 ikatson/aceproxy"
 alias efishrc "nvim ~/.config/fish/config.fish"
-alias evimrc "nvim ~/.vimrc"
+alias evimrc "nvim ~/.config/nvim/init.lua"
+
 #set -U FZF_DEFAULT_COMMAND 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 set -Ux FZF_DEFAULT_COMMAND "fd --type file --color=always"
 set -Ux FZF_FIND_FILE_COMMAND "fd --type file --color=always"
@@ -23,7 +24,7 @@ set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 
 # Prepare keychain
 if status --is-interactive
-    keychain --quiet -Q --eval id_rsa id_ed25519 | source
+    keychain --quiet -Q --eval id_ed25519 | source
 end
 
 starship init fish | source
