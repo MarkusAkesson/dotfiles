@@ -21,4 +21,9 @@ set -Ux FZF_DEFAULT_OPTS '--ansi'
 set -Ux FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -Ux FZF_CTRL_T_OPTS $FZF_DEFAULT_OPTS
 
+# Prepare keychain
+if status --is-interactive
+    keychain --quiet -Q --eval id_rsa id_ed25519 | source
+end
+
 starship init fish | source
