@@ -36,7 +36,22 @@ require('packer').startup(function()
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use 'sainnhe/gruvbox-material' -- Gruvbox colorscheme
+  use 'liuchengxu/vista.vim' -- View and serch LSP symbols and tags
 end)
+
+--Indent
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.shiftround = true
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.tabstop = 4
+vim.o.expandtab = true
+vim.o.smarttab = true
+
+vim.o.splitright = true
+vim.o.splitbelow = true
 
 --Incremental live completion (note: this is now a default on master)
 vim.o.inccommand = 'nosplit'
@@ -69,13 +84,13 @@ vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 --Set colorscheme (order is important here)
-vim.o.termguicolors = true
-vim.g.onedark_terminal_italics = 2
-vim.cmd [[colorscheme onedark]]
+-- vim.o.termguicolors = true
+-- vim.g.onedark_terminal_italics = 2
+    vim.cmd [[colorscheme gruvbox-material]]
 
 --Set statusbar
 vim.g.lightline = {
-  colorscheme = 'onedark',
+  colorscheme = 'gruvbox_material',
   active = { left = { { 'mode', 'paste' }, { 'gitbranch', 'readonly', 'filename', 'modified' } } },
   component_function = { gitbranch = 'fugitive#head' },
 }
