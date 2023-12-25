@@ -18,7 +18,7 @@ require('packer').startup(function()
   use 'tpope/vim-fugitive' -- Git commands in nvim
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'tpope/vim-commentary' -- "gc" to comment visual regions/lines
-  use 'ludovicchabant/vim-gutentags' -- Automatic tags management
+  --use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use 'joshdick/onedark.vim' -- Theme inspired by Atom
@@ -38,6 +38,8 @@ require('packer').startup(function()
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'sainnhe/gruvbox-material' -- Gruvbox colorscheme
   use 'liuchengxu/vista.vim' -- View and serch LSP symbols and tags
+  use 'simrat39/rust-tools.nvim' -- rust tools, lsp configuration
+
 end)
 
 --Indent
@@ -52,6 +54,9 @@ vim.o.smarttab = true
 
 vim.o.splitright = true
 vim.o.splitbelow = true
+
+--clipboard
+vim.o.clipboard = 'unnamedplus'
 
 --Incremental live completion (note: this is now a default on master)
 vim.o.inccommand = 'nosplit'
@@ -86,7 +91,7 @@ vim.wo.signcolumn = 'yes'
 --Set colorscheme (order is important here)
 -- vim.o.termguicolors = true
 -- vim.g.onedark_terminal_italics = 2
-    vim.cmd [[colorscheme gruvbox-material]]
+vim.cmd [[colorscheme gruvbox-material]]
 
 --Set statusbar
 vim.g.lightline = {
@@ -237,7 +242,7 @@ end
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers
 local servers = { 'clangd', 'rust_analyzer', 'pyright' }
@@ -247,6 +252,8 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+require('rust-tools').setup()
 
 -- Make runtime files discoverable to the server
 local runtime_path = vim.split(package.path, ';')

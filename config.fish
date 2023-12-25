@@ -1,13 +1,16 @@
 eval (/opt/homebrew/bin/brew shellenv)
-set PATH $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $PATH
+set PATH $HOME/.cargo/bin $HOME/.bin/ /usr/local/bin /Users/markusa/repos/fuchsia/.jiri_root/bin /usr/bin /usr/sbin /sbin $PATH
 #set -Ux RUST_SRC_PATH (rustc --print sysroot)/lib/rustlib/src/rust/src
 #set -Ux LDFLAGS "-L/usr/local/opt/llvm/lib"
 #set -Ux CPPFLAGS "-I/usr/local/opt/llvm/include"
 #set -Ux LIBRARY_PATH "$LIBRARY_PATH:/opt/local/lib/"
 set -Ux LIBRARY_PATH ""
 set -Ux EDITOR nvim
-
 set -Ux GOPATH $HOME/Programming/go
+
+set -gx LDFLAGS "-L/opt/homebrew/opt/libressl/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/libressl/include"
+set -gx PKG_CONFIG_PATH "-I/opt/homebrew/opt/libressl/include"
 
 alias vim nvim
 
@@ -28,3 +31,6 @@ if status --is-interactive
 end
 
 starship init fish | source
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/markusa/repos/google-cloud-sdk/path.fish.inc' ]; . '/Users/markusa/repos/google-cloud-sdk/path.fish.inc'; end
