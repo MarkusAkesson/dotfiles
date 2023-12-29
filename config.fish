@@ -1,4 +1,4 @@
-set PATH $HOME/.bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $PATH /opt/riscv/bin
+set PATH $HOME/.bin $HOME/.cargo/bin /usr/local/bin /usr/bin /usr/sbin /sbin $HOME/.local/bin $GOPATH/bin $PATH /opt/riscv/bin
 set fish_function_path $fish_function_path /usr/share/powerline/fish
 . $HOME/.config/fish/key-bindings.fish
 
@@ -26,8 +26,8 @@ alias gotop ytop
 alias youtube-dl yt-dlp
 
 # Launch aliases
-alias ghidra "~/repos/ghidra/ghidra_10.0.4_PUBLIC/ghidraRun"
-alias cutter "~/.bin/Cutter-v1.12.0-x64.Linux.AppImage"
+alias ghidra "~/repos/ghidra/ghidra_10.2.2_PUBLIC/ghidraRun"
+alias cutter "~/.bin/Cutter-v2.1.2-Linux-x86_64.AppImage"
 
 # FZF
 set -Ux FZF_DEFAULT_COMMAND 'rg --files --color auto --ignore --hidden  --glob "!.git/*"'
@@ -45,12 +45,12 @@ set -Ux MOZBUILD_STATE_PATH /me2/.mozbuild
 
 # Prepare keychain
 if status --is-interactive
-    keychain --quiet -Q --eval id_rsa id_ed25519 | source
+    keychain --quiet -Q --eval id_ed25519 | source
 end
 
 # Dev
-set -Ux CC "sccache clang"
-set -Ux CXX "sccache clang++"
+# set -Ux CC "sccache clang"
+# set -Ux CXX "sccache clang++"
 
 # Launch the starship prompt
 starship init fish | source

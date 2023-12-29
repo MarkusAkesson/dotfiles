@@ -1,0 +1,56 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	Development	//
+MODKEY	config.h	71;"	d
+SHCMD	config.h	79;"	d
+TAGKEYS	config.h	72;"	d
+['<S-Tab>'] 	init.lua	/^    ['<S-Tab>'] = function(fallback)$/;"	f
+['<Tab>'] 	init.lua	/^    ['<Tab>'] = function(fallback)$/;"	f
+['[M'] 	init.lua	/^        ['[M'] = '@function.outer',$/;"	f
+['[m'] 	init.lua	/^        ['[m'] = '@function.outer',$/;"	f
+[']M'] 	init.lua	/^        [']M'] = '@function.outer',$/;"	f
+[']m'] 	init.lua	/^        [']m'] = '@function.outer',$/;"	f
+['af'] 	init.lua	/^        ['af'] = '@function.outer',$/;"	f
+['if'] 	init.lua	/^        ['if'] = '@function.inner',$/;"	f
+borderpx	config.h	/^static const unsigned int borderpx = 5; \/* border pixel of windows *\/$/;"	v
+browser	config.h	/^static const char *browser[] = {"firefox", NULL};$/;"	v
+buttons	config.h	/^static Button buttons[] = {$/;"	v
+col_background	config.h	/^static const char col_background[] = "#282c34";$/;"	v
+col_black	config.h	/^static const char col_black[] = "#282c34";$/;"	v
+col_blue	config.h	/^static const char col_blue[] = "#61afef";$/;"	v
+col_cyan	config.h	/^static const char col_cyan[] = "#56b6c2";$/;"	v
+col_foreground	config.h	/^static const char col_foreground[] = "#abb2bf";$/;"	v
+col_green	config.h	/^static const char col_green[] = "#98c379";$/;"	v
+col_magenta	config.h	/^static const char col_magenta[] = "#c678dd";$/;"	v
+col_red	config.h	/^static const char col_red[] = "#e06c75";$/;"	v
+col_white	config.h	/^static const char col_white[] = "#abb2bf";$/;"	v
+col_yellow	config.h	/^static const char col_yellow[] = "#d19a66";$/;"	v
+colors	config.h	/^static const char *colors[][3] = {$/;"	v
+component_function 	init.lua	/^  component_function = { gitbranch = 'FugitiveHead' },$/;"	f
+dmenucmd	config.h	/^static const char *dmenucmd[] = {"dmenu_run",    "-m",  dmenumon,       "-fn",$/;"	v
+dmenufont	config.h	/^static const char dmenufont[] = "monospace:size=10";$/;"	v
+dmenumon	config.h	/^static char dmenumon[2] =$/;"	v
+expand 	init.lua	/^    expand = function(args)$/;"	f
+fonts	config.h	/^static const char *fonts[] = {"monospace:size=10"};$/;"	v
+gappx	config.h	/^static const unsigned int gappx = 6;    \/* gap pixel between windows *\/$/;"	v
+keys	config.h	/^static Key keys[] = {$/;"	v
+layouts	config.h	/^static const Layout layouts[] = {$/;"	v
+local on_attach 	init.lua	/^local on_attach = function(_, bufnr)$/;"	f
+mfact	config.h	/^static const float mfact = 0.55; \/* factor of master area size [0.05..0.95] *\/$/;"	v
+nmaster	config.h	/^static const int nmaster = 1;    \/* number of clients in master area *\/$/;"	v
+playnext	config.h	/^static const char *playnext[] = {"playerctl", "next"};$/;"	v
+playprev	config.h	/^static const char *playprev[] = {"playerctl", "prev"};$/;"	v
+playtoggle	config.h	/^static const char *playtoggle[] = {"playerctl", "play-pause"};$/;"	v
+resizehints	config.h	/^static const int resizehints =$/;"	v
+rules	config.h	/^static const Rule rules[] = {$/;"	v
+showbar	config.h	/^static const int showbar = 1;           \/* 0 means no bar *\/$/;"	v
+snap	config.h	/^static const unsigned int snap = 32;    \/* snap pixel *\/$/;"	v
+tags	config.h	/^static const char *tags[] = {"Term",  "Firefox", "Dev",     "Extra",  "Extra",$/;"	v
+termcmd	config.h	/^static const char *termcmd[] = {"alacritty", NULL};$/;"	v
+topbar	config.h	/^static const int topbar = 1;            \/* 0 means bottom bar *\/$/;"	v
+voldown	config.h	/^static const char *voldown[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",$/;"	v
+volmute	config.h	/^static const char *volmute[] = {"pactl", "set-sink-mute", "#DEFAULT_SINK@",$/;"	v
+volup	config.h	/^static const char *volup[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",$/;"	v
