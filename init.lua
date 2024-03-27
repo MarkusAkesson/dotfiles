@@ -38,7 +38,6 @@ require('packer').startup(function()
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
   use 'sainnhe/gruvbox-material' -- Gruvbox colorscheme
   use 'liuchengxu/vista.vim' -- View and serch LSP symbols and tags
-  use 'simrat39/rust-tools.nvim' -- rust tools, lsp configuration
 
 end)
 
