@@ -26,7 +26,7 @@ alias gotop ytop
 alias youtube-dl yt-dlp
 
 # Launch aliases
-alias ghidra "~/repos/ghidra/ghidra_10.2.2_PUBLIC/ghidraRun"
+alias ghidra "~/repos/ghidra/ghidra_11.0.1_PUBLIC/ghidraRun"
 alias cutter "~/.bin/Cutter-v2.1.2-Linux-x86_64.AppImage"
 
 # FZF
